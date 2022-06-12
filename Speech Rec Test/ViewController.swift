@@ -9,7 +9,7 @@ import UIKit
 import Speech
 import AVKit
 
-class ViewController: UIViewController, SFSpeechRecognizerDelegate {
+class ViewController: UIViewController, SFSpeechRecognizerDelegate, AVAudioRecorderDelegate {
     
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
@@ -17,16 +17,18 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     let audioEngine = AVAudioEngine()
     
-//    let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
-//    let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "id"))
     var speechRecognizer:SFSpeechRecognizer?
     var recognitionRequest:SFSpeechAudioBufferRecognitionRequest?
     var recognitionTask:SFSpeechRecognitionTask?
+    
+    var recordingSession:AVAudioSession?
+    var audioRecorder:AVAudioRecorder?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         speechRecognizer?.delegate = self
+        audioRecorder?.delegate = self
         
         SFSpeechRecognizer.requestAuthorization { (authStatus) in
             
@@ -53,10 +55,70 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 self.textLabel.text = msg
             }
         }
+        
+        recordingSession = AVAudioSession.sharedInstance()
+        do {
+            try recordingSession?.setCategory(.playAndRecord, mode: .default)
+            try recordingSession?.setActive(true)
+            recordingSession?.requestRecordPermission() { [unowned self] allowed in
+                DispatchQueue.main.async {
+                    if allowed {
+                        print("Recording instance ok")
+                    } else {
+                        print("Recording failed")
+                    }
+                }
+            }
+        }
+        catch {
+            print(error.localizedDescription)
+        }
+        
+    }
+    
+    func startRecording() {
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let filename = path.appendingPathComponent("recording.m4a")
+        
+        
+        do {
+            audioRecorder = try AVAudioRecorder(
+                url: filename,
+                settings: [
+                    AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                    AVSampleRateKey: 12000,
+                    AVNumberOfChannelsKey: 1,
+                    AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+                ]
+            )
+            audioRecorder?.record()
+        }
+        catch {
+            stopRecording()
+        }
+        
+    }
+    
+    func stopRecording(){
+        audioRecorder?.stop()
+        audioRecorder = nil
+    }
+    
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        if !flag {
+            stopRecording()
+        }
+    }
+    
+    func getFileUrl() -> URL {
+        let filename = "recording.m4a"
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let filepath = path.appendingPathComponent(filename)
+        return filepath
     }
     
     
-    func startRecording() {
+    func startTranscription() {
         
         // Clear previous task
         if recognitionTask != nil {
@@ -121,10 +183,12 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         
         // State is playing, command to stop
         if audioEngine.isRunning {
-            self.audioEngine.stop()
-            self.recognitionRequest?.endAudio()
-            self.startButton.setTitle("Start", for: .normal)
+            audioEngine.stop()
+            recognitionRequest?.endAudio()
+            stopRecording()
+            startButton.setTitle("Start", for: .normal)
             print("\n\n \(textLabel.text!)")
+            print(getFileUrl())
         }
         
         // State is stopped, command to start
@@ -139,10 +203,9 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "id"))
             }
             
-            self.startRecording()
-            self.startButton.setTitle("Stop", for: .normal)
-            
-            
+            startTranscription()
+            startRecording()
+            startButton.setTitle("Stop", for: .normal)
             
         }
     }

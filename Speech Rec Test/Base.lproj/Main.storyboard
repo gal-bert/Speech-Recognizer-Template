@@ -37,6 +37,14 @@
                                     <segment title="Indonesian"/>
                                 </segments>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A0r-9I-As6">
+                                <rect key="frame" x="250" y="64" width="124" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Recording"/>
+                                <connections>
+                                    <segue destination="qZo-u5-zhv" kind="show" id="RdH-La-QnM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -48,6 +56,9 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hrC-Ci-iec" secondAttribute="trailing" constant="20" id="Etj-IJ-TRA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="l6k-IG-Z6d" secondAttribute="trailing" constant="20" id="IZy-x8-dcr"/>
                             <constraint firstItem="hrC-Ci-iec" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="RY4-D3-ibF"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="A0r-9I-As6" secondAttribute="trailing" constant="40" id="ZGa-o3-oNz"/>
+                            <constraint firstItem="A0r-9I-As6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="250" id="cSr-wo-GQ4"/>
+                            <constraint firstItem="A0r-9I-As6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="fnl-fs-hwg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="6h7-5n-Hb4" secondAttribute="bottom" constant="60" id="xnL-sT-tt7"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6h7-5n-Hb4" secondAttribute="trailing" constant="20" id="yCd-aC-xfL"/>
                         </constraints>
@@ -61,6 +72,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="44.927536231884062" y="67.633928571428569"/>
+        </scene>
+        <!--Player View Controller-->
+        <scene sceneID="bCz-DR-4b3">
+            <objects>
+                <viewController id="qZo-u5-zhv" customClass="PlayerViewController" customModule="Speech_Rec_Test" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="la9-AI-LVe">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1MI-hV-oy7">
+                                <rect key="frame" x="181.5" y="711" width="51" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Play"/>
+                                <connections>
+                                    <action selector="play:" destination="qZo-u5-zhv" eventType="touchUpInside" id="Jpf-Wr-jLF"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="5bS-Nl-ilf"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="1MI-hV-oy7" firstAttribute="centerX" secondItem="la9-AI-LVe" secondAttribute="centerX" id="9RF-ez-L3R"/>
+                            <constraint firstItem="5bS-Nl-ilf" firstAttribute="bottom" secondItem="1MI-hV-oy7" secondAttribute="bottom" constant="100" id="vV4-1Z-1jn"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="lLW-Ms-c7H"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L3B-3F-Tiz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="897" y="68"/>
         </scene>
     </scenes>
     <resources>
